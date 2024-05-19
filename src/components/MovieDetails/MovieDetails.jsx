@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function MovieDetail () {
     const movie = useSelector(store => store.selectedMovie);
@@ -16,6 +16,7 @@ function MovieDetail () {
         <div>
             <h3>{movie.title}</h3>
             <img src={movie.poster} alt={movie.title} />
+            <Link to={`/edit/${movie.id}`}>Edit</Link>
             <p>{movie.description}</p>
             <h4>Movie Genres</h4>
             <ul>

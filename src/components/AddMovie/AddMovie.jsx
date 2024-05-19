@@ -1,27 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function AddMovie() {
   const [title, setTitle] = useState('');
   const [poster, setPoster] = useState('');
   const [description, setDescription] = useState('');
   const [genreIds, setGenreIds] = useState([]);
+  const { id } = useParams();
+  const history = useHistory();
 
   const dispatch = useDispatch();
   const genres = useSelector(store => store.genres);
 
-  useEffect(() => {
-    // Dispatch action to fetch genres when component mounts
-    dispatch({ type: 'FETCH_GENRES' });
-  }, [dispatch]);
+ useEffect(() => {
+  if (id) {
+    axios.get(`/api/movies/${id}`).then(response => {
+      const movie = response.data;
+      if (movie) {
+        setTitle(movie.title);
+        setPoster(movie.poster);
+        setDescription(movie.description);
+        if (movie.genres) {
+          setGenreIds(movie.genres.map(genre => genre.id));
+        }
+      }
+    }).catch(error => {
+        console.log(alert);
+        alert('Something went wrong');
+    })
+  }
+  dispatch({ type: 'FETCH_GENRES' });
+}, [dispatch, id]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch({
-      type: 'ADD_MOVIE',
-      payload: { title, poster, description, genre_ids: genreIds }
-    });
-    // Clear the form after submission
+    if (id) {
+        dispatch({ type: 'EDIT_MOVIE', payload: { id, title, poster, description, genre_ids: genreIds }, history })
+    }
+    else {
+        dispatch({ type: 'ADD_MOVIE', payload: { id, title, poster, description, genre_ids: genreIds }, history });
+    }
     setTitle('');
     setPoster('');
     setDescription('');
@@ -41,7 +61,7 @@ function AddMovie() {
 
   return (
     <div>
-      <h2>Add a New Movie</h2>
+      <h2>{id ? 'Edit Movie' : 'Add a New Movie'}</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="title">Title:</label>
@@ -51,6 +71,7 @@ function AddMovie() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
+          {/* {id && <p>Current title: {title}</p>} */}
         </div>
         <div>
           <label htmlFor="poster">Poster URL:</label>
@@ -60,6 +81,7 @@ function AddMovie() {
             value={poster}
             onChange={(e) => setPoster(e.target.value)}
           />
+          {/* {id && <p>Current poster URL: {poster}</p>} */}
         </div>
         <div>
           <label htmlFor="description">Description:</label>
@@ -68,6 +90,7 @@ function AddMovie() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
+          {/* {id && <p>Current description: {description}</p>} */}
         </div>
         <div>
           <h3>Genres:</h3>
@@ -85,7 +108,7 @@ function AddMovie() {
             </div>
           ))}
         </div>
-        <button type="submit">Add Movie</button>
+        <button type="submit">{id ? 'Update Movie' : 'Add Movie'}</button>
       </form>
     </div>
   );

@@ -3,6 +3,8 @@ import logger from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
 import { takeEvery, put, call } from 'redux-saga/effects';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
+
 
 // Create the rootSaga generator function
 function* rootSaga() {
@@ -10,6 +12,18 @@ function* rootSaga() {
   yield takeEvery('FETCH_MOVIE_DETAILS', fetchMovieDetails);
   yield takeEvery('FETCH_GENRES', fetchGenres);
   yield takeEvery('ADD_MOVIE', addMovie);
+  yield takeEvery('EDIT_MOVIE', editMovie);
+}
+
+function* editMovie(action) {
+  try {
+    yield axios.put(`/api/movies/${action.payload.id}`, action.payload);
+    if (action.history) {
+      action.history.goBack();
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 function* fetchMovieDetails(action) {

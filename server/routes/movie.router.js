@@ -77,11 +77,27 @@ router.post('/', (req, res) => {
           console.log('ERROR: Insert movie genres', err);
           res.sendStatus(500);
         });
-    }).catch(err => { // 👈 Catch for first query
+    }).catch(err => {
       console.log('ERROR: Insert movie', err);
       res.sendStatus(500);
     });
 });
+
+router.put('/:id', (req, res) => {
+  const queryText = `UPDATE "movies" SET "title" = $1, "poster" = $2, "description" = $3
+                    WHERE "id" = $4;`;
+  const { title, poster, description } = req.body;
+  const movieId = req.params.id;
+
+  pool.query(queryText, [title, poster, description, movieId])
+    .then(results => {
+      res.sendStatus(200);
+    }).catch(error => {
+      console.log('Error in PUT', error);
+      res.sendStatus(500);
+    });
+});
+
 
 module.exports = router;
 

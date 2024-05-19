@@ -22,6 +22,9 @@ function App() {
         <Route exact path="/add-movie">
           <AddMovie />
         </Route>
+        <Route exact path="/edit/:id">
+          <AddMovie />
+        </Route>
       </Router>
     </div>
   );
