@@ -54,31 +54,34 @@ router.post('/', (req, res) => {
       console.log('New Movie Id:', result.rows[0].id);
       const createdMovieId = result.rows[0].id
 
-      // Now handle the genre reference:
-      const insertMovieGenreQuery = `
-        INSERT INTO "movies_genres" 
-          ("movie_id", "genre_id")
-          VALUES
-          ($1, $2);
-      `;
-      const insertMovieGenreValues = [
-        createdMovieId,
-        req.body.genre_id
-      ]
-      // SECOND QUERY ADDS GENRE FOR THAT NEW MOVIE
-      pool.query(insertMovieGenreQuery, insertMovieGenreValues)
-        .then(result => {
-          //Now that both are done, send back success!
+      const genreIds = req.body.genre_ids;
+      const insertMovieGenreQueries = genreIds.map((genreId) => {
+        const insertMovieGenreQuery = `
+          INSERT INTO "movies_genres" 
+            ("movie_id", "genre_id")
+            VALUES
+            ($1, $2);
+        `;
+        const insertMovieGenreValues = [
+          createdMovieId,
+          genreId
+        ];
+        return pool.query(insertMovieGenreQuery, insertMovieGenreValues);
+      });
+
+      Promise.all(insertMovieGenreQueries)
+        .then(() => {
           res.sendStatus(201);
-        }).catch(err => {
-          // catch for second query
-          console.log(err);
-          res.sendStatus(500)
-      })
+        })
+        .catch(err => {
+          console.log('ERROR: Insert movie genres', err);
+          res.sendStatus(500);
+        });
     }).catch(err => { // 👈 Catch for first query
-      console.log(err);
-      res.sendStatus(500)
-    })
-})
+      console.log('ERROR: Insert movie', err);
+      res.sendStatus(500);
+    });
+});
 
 module.exports = router;
+
