@@ -10,7 +10,6 @@ function AddMovie() {
   const [genreIds, setGenreIds] = useState([]);
   const { id } = useParams();
   const history = useHistory();
-
   const dispatch = useDispatch();
   const genres = useSelector(store => store.genres);
 
@@ -47,6 +46,13 @@ function AddMovie() {
     setDescription('');
     setGenreIds([]);
   };
+
+  const handleCancel = () => {
+    setTitle('');
+    setPoster('');
+    setDescription('');
+    setGenreIds([]);
+  }
 
   const handleGenreChange = (event) => {
     const genreId = event.target.value;
@@ -109,6 +115,7 @@ function AddMovie() {
           ))}
         </div>
         <button type="submit">{id ? 'Update Movie' : 'Add Movie'}</button>
+        <button type="button" onClick={handleCancel}>Clear All</button>
       </form>
     </div>
   );
