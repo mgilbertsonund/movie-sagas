@@ -15,8 +15,7 @@ function MovieList() {
 
   const displayMovie = (movieToDisplay) => {
     console.log(movieToDisplay);
-    dispatch({ type: 'SET_MOVIE_DETAILS', payload: movieToDisplay })
-    history.push('/detail');
+    history.push(`/detail/${movieToDisplay.id}`);
   }
 
   return (
