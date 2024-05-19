@@ -1,3 +1,29 @@
 .App {
   text-align: center;
 }
+
+/* MovieList.css */
+.movies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.movies > div {
+  flex: 1 1 200px; /* Adjust this value based on how many items per row you want */
+  text-align: center;
+}
+
+.movies img {
+  width: 150px; /* Set the desired width */
+  height: 225px; /* Set the desired height */
+  object-fit: cover; /* Ensures the image covers the area while maintaining aspect ratio */
+  border-radius: 8px; /* Optional: add rounded corners */
+  cursor: pointer; /* Changes cursor to pointer on hover */
+}
+
+.movies img:hover {
+  transform: scale(1.05); /* Optional: slight zoom effect on hover */
+  transition: transform 0.3s ease; /* Smooth transition for the hover effect */
+}
+

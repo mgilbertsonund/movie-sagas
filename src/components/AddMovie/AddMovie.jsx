@@ -29,8 +29,14 @@ function AddMovie() {
   };
 
   const handleGenreChange = (event) => {
-    const selectedOptions = Array.from(event.target.selectedOptions, option => option.value);
-    setGenreIds(selectedOptions);
+    const genreId = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      setGenreIds([...genreIds, genreId]);
+    } else {
+      setGenreIds(genreIds.filter(id => id !== genreId));
+    }
   };
 
   return (
@@ -64,19 +70,20 @@ function AddMovie() {
           ></textarea>
         </div>
         <div>
-          <label htmlFor="genre">Genres:</label>
-          <select
-            id="genre"
-            multiple
-            value={genreIds}
-            onChange={handleGenreChange}
-          >
-            {genres.map((genre) => (
-              <option key={genre.id} value={genre.id}>
+          <h3>Genres:</h3>
+          {genres.map((genre) => (
+            <div key={genre.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  value={genre.id}
+                  onChange={handleGenreChange}
+                  checked={genreIds.includes(genre.id.toString())}
+                />
                 {genre.name}
-              </option>
-            ))}
-          </select>
+              </label>
+            </div>
+          ))}
         </div>
         <button type="submit">Add Movie</button>
       </form>

@@ -42,6 +42,8 @@ function* addMovie(action) {
     console.error('Error adding movie:', error);
   }
 }
+
+// Fetch all movies
 function* fetchAllMovies() {
   try {
     // Get the movies:
