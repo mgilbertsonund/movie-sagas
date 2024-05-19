@@ -14,7 +14,6 @@ function MovieList() {
   }, []);
 
   const displayMovie = (movieToDisplay) => {
-    console.log(movieToDisplay);
     history.push(`/detail/${movieToDisplay.id}`);
   }
 
@@ -22,7 +21,6 @@ function MovieList() {
     <main>
       <h1>MovieList</h1>
       <section className="movies">
-        {/* loop over array, and for each movie, display on DOM */}
         {movies.map(movie => {
           return (
             <div data-testid='movieItem' key={movie.id}>

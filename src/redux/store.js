@@ -13,7 +13,9 @@ function* rootSaga() {
 function* fetchMovieDetails(action) {
   try {
     const movie = yield axios.get(`/api/movies/${action.payload}`);
-    yield put({ type:'SET_MOVIE_DETAILS', payload: movie.data });
+    yield put({ type: 'SET_MOVIE_DETAILS', payload: movie.data });
+    const genres = yield axios.get(`/api/genres/${action.payload}`);
+    yield put ({ type: 'SET_GENRES', payload: genres.data });
   } catch (err) {
     console.log(err);
   }

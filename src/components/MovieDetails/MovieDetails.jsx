@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 function MovieDetail () {
     const movie = useSelector(store => store.selectedMovie);
+    const genres = useSelector(store => store.genres);
     const { id } = useParams();
     const dispatch = useDispatch();
 
@@ -16,6 +17,12 @@ function MovieDetail () {
             <h3>{movie.title}</h3>
             <img src={movie.poster} alt={movie.title} />
             <p>{movie.description}</p>
+            <h4>Movie Genres</h4>
+            <ul>
+                {
+                    genres.map(genreToDisplay => <li>{genreToDisplay.name}</li>)
+                }
+            </ul>
         </div>
     )
 }
